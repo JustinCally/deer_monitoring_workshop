@@ -203,7 +203,7 @@ segdata <- left_join(camera_deployments, summarised_count) %>% # join site info 
   sf::st_drop_geometry()
 
 # Make a tweedie distribution model of abundance
-mod_tw <- dsm(count~s(X, Y), # count is dependent on a spline of X and Y
+mod_tw <- dsm(count~s(X, Y, k = 50), # count is dependent on a spline of X and Y
               ddf.obj=hn1, # detecton function
               segment.data=segdata, # site data
               observation.data=hn1$ddf$data, # observation data (same as in the ds function)
