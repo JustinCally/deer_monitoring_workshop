@@ -210,6 +210,10 @@ mod_tw <- dsm(count~s(X, Y), # count is dependent on a spline of X and Y
               family=tw(),
               transect="point")
 
+summary(mod_tw)
+qq.gam(mod_tw, pch=16, cex=0.5, main="QQ-Plot",rep=100)
+rqgam_check(mod_tw)
+
 # Get standardised (1km2 predictions for each site)
 preddata <- segdata %>% mutate(off.set=1e6)
 pp <- preddata %>% mutate(dens = predict(mod_tw, preddata) %>% round(2) %>% as.numeric())
