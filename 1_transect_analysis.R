@@ -7,7 +7,8 @@ library(tidyverse)
 library(unmarked)
 # install.packages("mapview")
 library(mapview)
-
+# install.packages("terra")
+library(terra)
 
 #### Step 2: Read in data ####
 sambar_detection <- read_csv("example_data/transects/sambar_detection.csv")
@@ -77,7 +78,7 @@ par(mfrow = c(1, 3))
 plotEffects(model_fit, "state", covariate = "BIO04")
 plotEffects(model_fit, "state", covariate = "NPP")
 plotEffects(model_fit, "state", covariate = "SLOPE")
-
+dev.off()
 #### Step 5: Generate predictions ####
 # you can back-predict to the sites to get average occupancy
 # state = occupancy, det = detection
@@ -96,3 +97,12 @@ mapview(x = map_data,
         zcol = "Predicted",
         grid = FALSE,
         crs = 4283)
+
+# create occupancy predictions across Victoria
+statewide_raster <- rast("example_data/transects/statewide_raster.tif")
+
+plot(statewide_raster$BIO04)
+
+statewide_preds <- predict(model_fit, statewide_raster, type = "state")
+
+plot(statewide_preds$Predicted)
