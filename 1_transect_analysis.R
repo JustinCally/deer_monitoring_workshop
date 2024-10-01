@@ -35,7 +35,7 @@ site_covariates <- site_data %>%
   filter(SiteID %in% sambar_detection_ordered$SiteID)
 
 # check same length
-length(pa) == nrow(siteCovs)
+length(pa) == nrow(site_covariates)
 
 # Make observation covariates for different survey methods.
 det_covariates <- list()
