@@ -2,13 +2,17 @@
 
 
 #### Step 1: Setup ####
+# install rtools if not installed: https://cran.r-project.org/bin/windows/Rtools/
+
 # install.packages("tidyverse")
 library(tidyverse)
 # install.packages("camtrapR")
 library(camtrapR)
 # note you will need to install exiftoolr and make camtrapR recognise it
 # eg:
-# camtrapR::addToPath()
+# You should put the exiftool executable in some director
+# and then tell R where it is with the following code:
+# camtrapR::addToPath("/Users/SomeDirectory/exiftool.exe")
 # install.packages("mgcv")
 library(mgcv)
 # install.packages("mapview")
@@ -203,7 +207,7 @@ segdata <- left_join(camera_deployments, summarised_count) %>% # join site info 
   sf::st_drop_geometry()
 
 # Make a tweedie distribution model of abundance
-mod_tw <- dsm(count~s(X, Y, k = 50), # count is dependent on a spline of X and Y
+mod_tw <- dsm(count~s(X, Y, k = 25), # count is dependent on a spline of X and Y
               ddf.obj=hn1, # detecton function
               segment.data=segdata, # site data
               observation.data=hn1$ddf$data, # observation data (same as in the ds function)
@@ -253,7 +257,8 @@ plot(prediction_raster)
 
 # variance estimation
 # Variance estimate assuming independence between components
-sambar.var <- dsm_var_gam(mod_tw, statewide_pred_data, off.set=statewide_pred_data$off.set)
+sambar.var <- dsm_var_gam(mod_tw, statewide_pred_data,
+                          off.set=statewide_pred_data$off.set)
 sambar.var
 
 # Bootstrap variance
